@@ -1,0 +1,71 @@
+## .NET / Visual Studio / Rider / VS Code
+
+# Build results
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+*.vssscc
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Build artifacts
+*.dll
+*.exe
+*.pdb
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET Core secrets & environment
+appsettings.Development.json
+appsettings.Local.json
+*.env
+.env
+secrets.json
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Database / local files
+*.db
+*.sqlite
+
+# Test results
+[Tt]est[Rr]esult*/
+coverage/
+*.trx
+
+# Publish output
+publish/
+PublishScripts/
+
+# Rider/JetBrains
+*.DotSettings.user
