@@ -73,7 +73,7 @@ public class DonacionesController : ControllerBase
 
     // POST /api/donaciones
     [HttpPost]
-    public async Task<ActionResult<DonacionDto>> CrearDonacion(CrearDonacionDto dto)
+    public async Task<ActionResult<DonacionDto>> CrearDonacion(CrearDonacionDTO dto)
     {
         var donacion = new Donacion
         {
