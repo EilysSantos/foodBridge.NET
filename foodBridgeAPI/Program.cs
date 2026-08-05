@@ -1,18 +1,31 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
+
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    var url = app.Urls.FirstOrDefault() ?? "http://localhost:5287";
+    Console.WriteLine();
+    Console.WriteLine("========================================");
+    Console.WriteLine(" Servidor FoodBridge API corriendo");
+    Console.WriteLine($" API:     {url}");
+    Console.WriteLine($" Swagger: {url}/swagger");
+    Console.WriteLine("========================================");
+    Console.WriteLine();
+});
 
 var summaries = new[]
 {
