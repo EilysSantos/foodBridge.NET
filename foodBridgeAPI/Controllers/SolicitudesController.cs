@@ -16,6 +16,25 @@ public class SolicitudesController : ControllerBase
         _context = context;
     }
 
+    // GET /api/solicitudes
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<SolicitudDTO>>> GetSolicitudes()
+    {
+        var solicitudes = await _context.Solicitudes
+            .Select(s => new SolicitudDTO
+            {
+                Id = s.Id,
+                DonacionId = s.DonacionId,
+                FundacionId = s.FundacionId,
+                EstadoSolicitud = s.EstadoSolicitud,
+                FechaSolicitud = s.FechaSolicitud,
+                FechaEntrega = s.FechaEntrega
+            })
+            .ToListAsync();
+
+        return Ok(solicitudes);
+    }
+
     // GET /api/solicitudes/{id}
     [HttpGet("{id:int}")]
     public async Task<ActionResult<SolicitudDTO>> GetSolicitud(int id)
@@ -37,7 +56,51 @@ public class SolicitudesController : ControllerBase
         FechaEntrega = solicitud.FechaEntrega
     };
 
-        return Ok(solicitud);
+        return Ok(solicitudDto);
+    }
+
+    // PUT /api/solicitudes/{id}
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult<SolicitudDTO>> ActualizarSolicitud(int id, ActualizarSolicitudDTO dto)
+    {
+        var solicitud = await _context.Solicitudes.FindAsync(id);
+
+        if (solicitud is null)
+        {
+            return NotFound();
+        }
+
+        var estadosValidos = new[] { "Pendiente", "Completada", "Cancelada" };
+        if (!estadosValidos.Contains(dto.EstadoSolicitud))
+        {
+            return BadRequest($"Estado inválido. Los valores permitidos son: {string.Join(", ", estadosValidos)}.");
+        }
+
+        solicitud.EstadoSolicitud = dto.EstadoSolicitud;
+        solicitud.FechaEntrega = dto.FechaEntrega;
+
+        if (dto.EstadoSolicitud == "Completada")
+        {
+            var donacion = await _context.Donaciones.FindAsync(solicitud.DonacionId);
+            if (donacion is not null)
+            {
+                donacion.Estado = "Entregado";
+            }
+        }
+
+        await _context.SaveChangesAsync();
+
+        var respuesta = new SolicitudDTO
+        {
+            Id = solicitud.Id,
+            DonacionId = solicitud.DonacionId,
+            FundacionId = solicitud.FundacionId,
+            EstadoSolicitud = solicitud.EstadoSolicitud,
+            FechaSolicitud = solicitud.FechaSolicitud,
+            FechaEntrega = solicitud.FechaEntrega
+        };
+
+        return Ok(respuesta);
     }
 
     // POST /api/solicitudes

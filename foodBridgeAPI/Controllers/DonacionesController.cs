@@ -68,7 +68,7 @@ public class DonacionesController : ControllerBase
         FechaCreacion = donacion.FechaCreacion
        };
 
-        return Ok(donacion);
+        return Ok(dto);
     }
 
     // POST /api/donaciones

@@ -6,7 +6,7 @@
     }
   },
   "ConnectionStrings": {
-    "SupabaseConnection": "Host=aws-0-sa-east-1.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.shkryvwultyspgmtbpnm;Password=Diplomado2026;SSL Mode=Require;Trust Server Certificate=true"
+    "SupabaseConnection": "Host=YOUR_SUPABASE_HOST;Port=5432;Database=postgres;Username=YOUR_SUPABASE_USER;Password=YOUR_SUPABASE_PASSWORD;SSL Mode=Require;Trust Server Certificate=true"
   },
   "GeminiSettings": {
     "ApiKey": "YOUR_GEMINI_API_KEY",

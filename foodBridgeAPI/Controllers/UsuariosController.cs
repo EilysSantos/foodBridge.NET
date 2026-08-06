@@ -66,6 +66,12 @@ public async Task<ActionResult<UsuarioDTO>> GetUsuario(int id)
    [HttpPost]
 public async Task<ActionResult<UsuarioDTO>> CrearUsuario(CrearUsuarioDto dto)
 {
+    var emailEnUso = await _context.Usuarios.AnyAsync(u => u.Email == dto.Email);
+    if (emailEnUso)
+    {
+        return BadRequest("Ya existe un usuario registrado con ese correo electrónico.");
+    }
+
     var usuario = new Usuario
     {
         Nombre = dto.Nombre,
