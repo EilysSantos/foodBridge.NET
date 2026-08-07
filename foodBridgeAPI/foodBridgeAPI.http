@@ -1,6 +1,21 @@
 @foodBridgeAPI_HostAddress = http://localhost:5287
 
-GET {{foodBridgeAPI_HostAddress}}/weatherforecast/
+### Obtener todas las donaciones
+GET {{foodBridgeAPI_HostAddress}}/api/donaciones
 Accept: application/json
+
+###
+
+### Crear una nueva donación (Prueba con IA Gemini)
+POST {{foodBridgeAPI_HostAddress}}/api/donaciones
+Content-Type: application/json
+
+{
+  "donanteId": 1,
+  "titulo": "Leche entera y yogur de fresa",
+  "descripcion": "4 litros de leche entera y 6 vasos de yogur con vencimiento cercano",
+  "cantidad": "10 unidades",
+  "fechaVencimiento": "2026-08-10T18:00:00Z"
+}
 
 ###
