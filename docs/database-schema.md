@@ -95,14 +95,33 @@ erDiagram
 
 ## 4. Connection String (Supabase)
 
-> No incluir credenciales reales aquí. Usar `appsettings.Development.json.example` como plantilla
-> y guardar los valores reales solo en `appsettings.Development.json` local (ignorado por Git).
+> No incluir credenciales reales aquí. Usar `appsettings.Development.json.example` como plantilla.
 
-## 5. Migraciones
-
-<!-- Comandos usados para generar y aplicar migraciones con EF Core -->
+La cadena de conexión real **no** se guarda en ningún archivo del repositorio (ni siquiera en
+`appsettings.Development.json`, que además está ignorado por Git). Se configura localmente con
+`dotnet user-secrets`, que ASP.NET Core carga automáticamente en modo Development:
 
 ```
-dotnet ef migrations add NombreMigracion
-dotnet ef database update
+cd foodBridgeAPI
+dotnet user-secrets init
+dotnet user-secrets set "ConnectionStrings:SupabaseConnection" "Host=...;Port=5432;Database=postgres;Username=...;Password=...;SSL Mode=Require;Trust Server Certificate=true"
 ```
+
+Cada integrante del equipo debe correr esto una vez en su máquina con la cadena de conexión real
+(solicitarla al Database Specialist) para poder ejecutar el proyecto localmente.
+
+## 5. Estado del esquema
+
+El esquema de las 3 tablas (`Usuarios`, `Donaciones`, `Solicitudes`), sus relaciones y el índice
+único de `Solicitudes.DonacionId` ya están creados y en uso en la instancia de Supabase del
+proyecto, con datos de prueba (seed) cargados.
+
+No existe una carpeta `Migrations/` de EF Core en este repositorio: el esquema se creó y gestiona
+directamente sobre la base remota de Supabase, no por migraciones versionadas localmente. Esto
+significa que:
+
+- Todo el equipo apunta a la **misma** base de datos en la nube (no hay una base local por
+  desarrollador que migrar).
+- Si en el futuro se necesita modificar el esquema, debe hacerse coordinado entre el equipo
+  (idealmente introduciendo migraciones EF Core a partir de este punto, para tener historial
+  versionado de cambios).
