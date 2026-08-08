@@ -6,7 +6,7 @@ Accept: application/json
 
 ###
 
-### Crear una nueva donación (Prueba con IA Gemini)
+### Crear una nueva donación (Prueba con IA Groq)
 POST {{foodBridgeAPI_HostAddress}}/api/donaciones
 Content-Type: application/json
 

@@ -1,4 +1,5 @@
 using foodBridgeAPI.Data;
+using foodBridgeAPI.Middleware;
 using foodBridgeAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<GroqSettings>(builder.Configuration.GetSection("GroqSettings"));
-builder.Services.AddHttpClient<IGeminiService, GroqService>();
+builder.Services.AddHttpClient<IGroqService, GroqService>();
+
+builder.Services.AddScoped<IDonacionService, DonacionService>();
+builder.Services.AddScoped<ISolicitudService, SolicitudService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("SupabaseConnection")));
@@ -26,6 +31,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

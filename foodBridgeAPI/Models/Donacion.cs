@@ -22,7 +22,7 @@ public class Donacion
     [MaxLength(20)]
     public string Estado { get; set; } = "Disponible"; // Disponible | Reservado | Entregado | Expirado
 
-    // Campos calculados por Google Gemini IA
+    // Campos calculados por IA (Groq)
     public int? ScoreUrgencia { get; set; }
     public bool? ContieneAlergenos { get; set; }
     public bool? RequiereCadenaFrio { get; set; }

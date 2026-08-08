@@ -70,10 +70,10 @@ erDiagram
 | Cantidad | string (VARCHAR 50) | Volumen o peso aproximado (ej. "10 kg", "20 porciones"). |
 | FechaVencimiento | DateTime | Fecha y hora límite estimada para el consumo seguro del alimento. |
 | Estado | string (VARCHAR 20) | Estado actual del lote: 'Disponible', 'Reservado', 'Entregado', 'Expirado'. |
-| ScoreUrgencia | int | Evaluado por Google Gemini IA (1-10). Mayor prioridad para consumo rápido. |
-| ContieneAlergenos | bool | Evaluado por Google Gemini IA. Indicador de alérgenos comunes detectados. |
-| RequiereCadenaFrio | bool | Evaluado por Google Gemini IA. Define si el alimento necesita refrigeración. |
-| RecomendacionIa | string (TEXT) | Evaluado por Google Gemini IA. Pautas breves para la conservación o transporte. |
+| ScoreUrgencia | int | Evaluado por IA (Groq) (1-10). Mayor prioridad para consumo rápido. |
+| ContieneAlergenos | bool | Evaluado por IA (Groq). Indicador de alérgenos comunes detectados. |
+| RequiereCadenaFrio | bool | Evaluado por IA (Groq). Define si el alimento necesita refrigeración. |
+| RecomendacionIa | string (TEXT) | Evaluado por IA (Groq). Pautas breves para la conservación o transporte. |
 | FechaCreacion | DateTime | Timestamp de publicación de la donación en la plataforma. |
 
 ### Solicitud

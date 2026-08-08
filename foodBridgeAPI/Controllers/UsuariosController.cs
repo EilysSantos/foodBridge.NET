@@ -1,8 +1,6 @@
-using foodBridgeAPI.Data;
-using foodBridgeAPI.Models;
 using foodBridgeAPI.DTOs.Usuario;
+using foodBridgeAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace foodBridgeAPI.Controllers;
 
@@ -10,91 +8,38 @@ namespace foodBridgeAPI.Controllers;
 [Route("api/[controller]")]
 public class UsuariosController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IUsuarioService _usuarioService;
 
-    public UsuariosController(AppDbContext context)
+    public UsuariosController(IUsuarioService usuarioService)
     {
-        _context = context;
+        _usuarioService = usuarioService;
     }
 
     // GET: api/usuarios
-   [HttpGet]
-public async Task<ActionResult<IEnumerable<UsuarioDTO>>> GetUsuarios()
-{
-    var usuarios = await _context.Usuarios
-        .Select(u => new UsuarioDTO
-        {
-            Id = u.Id,
-            Nombre = u.Nombre,
-            TipoUsuario = u.TipoUsuario,
-            Email = u.Email,
-            Telefono = u.Telefono,
-            Direccion = u.Direccion,
-            FechaRegistro = u.FechaRegistro
-        })
-        .ToListAsync();
-
-    return Ok(usuarios);
-}
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<UsuarioDTO>>> GetUsuarios()
+    {
+        return Ok(await _usuarioService.GetUsuariosAsync());
+    }
 
     // GET: api/usuarios/5
     [HttpGet("{id:int}")]
-public async Task<ActionResult<UsuarioDTO>> GetUsuario(int id)
-{
-    var usuario = await _context.Usuarios.FindAsync(id);
-
-    if (usuario == null)
+    public async Task<ActionResult<UsuarioDTO>> GetUsuario(int id)
     {
-        return NotFound();
+        var usuario = await _usuarioService.GetUsuarioAsync(id);
+        return usuario is null ? NotFound() : Ok(usuario);
     }
-
-    var dto = new UsuarioDTO
-    {
-        Id = usuario.Id,
-        Nombre = usuario.Nombre,
-        TipoUsuario = usuario.TipoUsuario,
-        Email = usuario.Email,
-        Telefono = usuario.Telefono,
-        Direccion = usuario.Direccion,
-        FechaRegistro = usuario.FechaRegistro
-    };
-
-    return Ok(dto);
-}
 
     // POST: api/usuarios
-   [HttpPost]
-public async Task<ActionResult<UsuarioDTO>> CrearUsuario(CrearUsuarioDto dto)
-{
-    var emailEnUso = await _context.Usuarios.AnyAsync(u => u.Email == dto.Email);
-    if (emailEnUso)
+    [HttpPost]
+    public async Task<ActionResult<UsuarioDTO>> CrearUsuario(CrearUsuarioDto dto)
     {
-        return BadRequest("Ya existe un usuario registrado con ese correo electrónico.");
+        var (usuario, error) = await _usuarioService.CrearUsuarioAsync(dto);
+        if (error is not null)
+        {
+            return BadRequest(error);
+        }
+
+        return CreatedAtAction(nameof(GetUsuario), new { id = usuario!.Id }, usuario);
     }
-
-    var usuario = new Usuario
-    {
-        Nombre = dto.Nombre,
-        TipoUsuario = dto.TipoUsuario,
-        Email = dto.Email,
-        Telefono = dto.Telefono,
-        Direccion = dto.Direccion
-    };
-
-    _context.Usuarios.Add(usuario);
-    await _context.SaveChangesAsync();
-
-    var respuesta = new UsuarioDTO
-    {
-        Id = usuario.Id,
-        Nombre = usuario.Nombre,
-        TipoUsuario = usuario.TipoUsuario,
-        Email = usuario.Email,
-        Telefono = usuario.Telefono,
-        Direccion = usuario.Direccion,
-        FechaRegistro = usuario.FechaRegistro
-    };
-
-    return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, respuesta);
-}
 }

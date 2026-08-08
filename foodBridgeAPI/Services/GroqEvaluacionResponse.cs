@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace foodBridgeAPI.Services;
 
-public class GeminiEvaluacionResponse
+public class GroqEvaluacionResponse
 {
     [JsonPropertyName("scoreUrgencia")]
     public int ScoreUrgencia { get; set; }

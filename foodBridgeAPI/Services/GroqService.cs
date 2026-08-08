@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace foodBridgeAPI.Services;
 
-public class GroqService : IGeminiService
+public class GroqService : IGroqService
 {
     private readonly HttpClient _httpClient;
     private readonly GroqSettings _settings;
@@ -18,7 +18,7 @@ public class GroqService : IGeminiService
         _logger = logger;
     }
 
-    public async Task<GeminiEvaluacionResponse?> EvaluarDonacionAsync(string titulo, string? descripcion, string cantidad, DateTime fechaVencimiento)
+    public async Task<GroqEvaluacionResponse?> EvaluarDonacionAsync(string titulo, string? descripcion, string cantidad, DateTime fechaVencimiento)
     {
         if (string.IsNullOrWhiteSpace(_settings.ApiKey))
         {
@@ -83,7 +83,7 @@ Evalúa esta donación:
                     var textResponse = content.GetString();
                     if (!string.IsNullOrWhiteSpace(textResponse))
                     {
-                        var evaluacion = JsonSerializer.Deserialize<GeminiEvaluacionResponse>(textResponse, new JsonSerializerOptions
+                        var evaluacion = JsonSerializer.Deserialize<GroqEvaluacionResponse>(textResponse, new JsonSerializerOptions
                         {
                             PropertyNameCaseInsensitive = true
                         });
@@ -102,7 +102,7 @@ Evalúa esta donación:
         }
     }
 
-    private static GeminiEvaluacionResponse GenerarFallback(DateTime fechaVencimiento)
+    private static GroqEvaluacionResponse GenerarFallback(DateTime fechaVencimiento)
     {
         var diasRestantes = (fechaVencimiento - DateTime.UtcNow).TotalDays;
         int score = diasRestantes switch
@@ -113,7 +113,7 @@ Evalúa esta donación:
             _ => 30
         };
 
-        return new GeminiEvaluacionResponse
+        return new GroqEvaluacionResponse
         {
             ScoreUrgencia = score,
             ContieneAlergenos = false,
